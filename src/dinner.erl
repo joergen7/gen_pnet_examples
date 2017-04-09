@@ -2,7 +2,9 @@
 
 -export( [demo/0] ).
 -export( [handle_call/3, handle_cast/2, trigger_map/0] ).
--export( [place_lst/0, trsn_lst/0, preset/1, is_enabled/2, fire/2] ).
+-export( [place_lst/0, trsn_lst/0, init_marking/0, preset/1, is_enabled/2, fire/2] ).
+
+-include_lib( "gen_pnet/include/gen_pnet.hrl" ).
 
 %%====================================================================
 %% API functions
@@ -12,9 +14,11 @@ demo() ->
 
   F = fun
         F( P ) ->
-          timer:sleep( 10000 ),
-          Stats = gen_pnet:stats( P ),
-          io:format( "~p~n", [Stats] ),
+          timer:sleep( 2000 ),
+          #stats{ current = Current } = gen_pnet:stats( P ),
+          
+
+          io:format( "~p~n~n", [Current] ),
           F( P )
       end,
 
@@ -40,7 +44,7 @@ place_lst() ->
   [eat1, eat2, eat3, eat4, eat5,
    fork1, fork2, fork3, fork4, fork5].
 
- trsn_lst() ->
+trsn_lst() ->
    [take1, release1,
     take2, release2,
     take3, release3,
