@@ -1,7 +1,7 @@
 -module( dinner ).
 
--export( [demo/0] ).
--export( [handle_call/3, handle_cast/2, trigger_map/0] ).
+-export( [start/0] ).
+-export( [handle_call/3, handle_cast/2, trigger/2] ).
 -export( [place_lst/0, trsn_lst/0, init_marking/0, preset/1, is_enabled/2, fire/2] ).
 
 -include_lib( "gen_pnet/include/gen_pnet.hrl" ).
@@ -10,7 +10,7 @@
 %% API functions
 %%====================================================================
 
-demo() ->
+start() ->
 
   F = fun
         F( P ) ->
@@ -18,7 +18,7 @@ demo() ->
           #stats{ current = Current } = gen_pnet:stats( P ),
           
 
-          io:format( "~p~n~n", [Current] ),
+          io:format( "~p~n", [Current] ),
           F( P )
       end,
 
@@ -34,7 +34,7 @@ handle_call( _Request, _From, _NetState ) -> {reply, ok}.
 
 handle_cast( _Request, _NetState ) -> noreply.
 
-trigger_map() -> #{}.
+trigger( _, _ ) -> pass.
 
 %%====================================================================
 %% Petri net callback functions
