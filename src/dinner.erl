@@ -1,8 +1,10 @@
 -module( dinner ).
 
 -export( [start/0] ).
--export( [handle_call/3, handle_cast/2, trigger/2] ).
--export( [place_lst/0, trsn_lst/0, init_marking/0, preset/1, is_enabled/2, fire/2] ).
+-export( [code_change/3, handle_call/3, handle_cast/2, handle_info/2,
+          terminate/2, trigger/2] ).
+-export( [place_lst/0, trsn_lst/0, init_marking/0, preset/1, is_enabled/2,
+          fire/2] ).
 
 -include_lib( "gen_pnet/include/gen_pnet.hrl" ).
 
@@ -15,24 +17,29 @@ start() ->
   F = fun
         F( P ) ->
           timer:sleep( 2000 ),
-          #stats{ current = Current } = gen_pnet:stats( P ),
+          #stats{ current = Current } = gen_pnet:get_stats( P ),
           
 
           io:format( "~p~n", [Current] ),
           F( P )
       end,
 
-  {ok, Pid} = gen_pnet:start_link( ?MODULE ),
+  {ok, Pid} = gen_pnet:start_link( ?MODULE, [] ),
   F( Pid ).
 
 %%====================================================================
 %% Interface callback functions
 %%====================================================================
 
+code_change( _OldVsn, NetState, _Extra ) -> {ok, NetState}.
 
 handle_call( _Request, _From, _NetState ) -> {reply, ok}.
 
 handle_cast( _Request, _NetState ) -> noreply.
+
+handle_info( _Request, _NetState ) -> noreply.
+
+terminate( _Reason, _NetState ) -> ok.
 
 trigger( _, _ ) -> pass.
 
