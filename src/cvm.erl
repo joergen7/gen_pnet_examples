@@ -3,10 +3,12 @@
 -export( [code_change/3, handle_call/3, handle_cast/2, handle_info/2,
           terminate/2, trigger/2] ).
 
--export( [place_lst/0, trsn_lst/0, init_marking/0, preset/1, is_enabled/2,
+-export( [place_lst/0, trsn_lst/0, init_marking/1, preset/1, is_enabled/2,
 	      fire/2] ).
 
 -export( [start_link/0, insert_coin/1] ).
+
+-include_lib( "gen_pnet/include/gen_pnet.hrl" ).
 
 %%====================================================================
 %% API functions
@@ -24,11 +26,20 @@ insert_coin( Pid ) ->
 
 code_change( _OldVsn, NetState, _Extra ) -> {ok, NetState}.
 
-handle_call( _Request, _From, _NetState ) -> {reply, ok}.
+handle_call( insert_coin, _, _ ) ->
+  {reply, ok, #{}, #{ coin_slot => [coin] }};
 
+handle_call( remove_cookie_box, _,
+             #net_state{ marking = #{ compartment := C } } ) ->
 
-handle_cast( insert_coin, _ ) -> {noreply, #{}, #{ coin_slot => [coin] }};
-handle_cast( _, _ )           -> noreply.
+  case C of
+  	[]    -> {reply, {error, empty_compartment}};
+  	[_|_] -> {reply, ok, #{ compartment => [cookie_box] }, #{}}
+  end;
+
+handle_call( _, _, _ ) -> {reply, {error, bad_msg}}.
+
+handle_cast( _Request, _NetState ) -> noreply.
 
 handle_info( _Request, _NetState ) -> noreply.
 
@@ -47,8 +58,8 @@ place_lst() ->
 trsn_lst() ->
    [a, b].
 
-init_marking() ->
-  #{ storage => [cookie_box, cookie_box, cookie_box] }.
+init_marking( storage ) -> [cookie_box, cookie_box, cookie_box];
+init_marking( _ )       -> [].
 
 preset( a ) -> [coin_slot];
 preset( b ) -> [signal, storage].

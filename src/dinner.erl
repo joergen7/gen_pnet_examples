@@ -5,7 +5,7 @@
 -export( [start/0] ).
 -export( [code_change/3, handle_call/3, handle_cast/2, handle_info/2,
           terminate/2, trigger/2] ).
--export( [place_lst/0, trsn_lst/0, init_marking/0, preset/1, is_enabled/2,
+-export( [place_lst/0, trsn_lst/0, init_marking/1, preset/1, is_enabled/2,
           fire/2] ).
 
 -include_lib( "gen_pnet/include/gen_pnet.hrl" ).
@@ -60,14 +60,12 @@ trsn_lst() ->
     take4, release4,
     take5, release5].
 
-init_marking() ->
-  #{
-    fork1 => [fork],
-    fork2 => [fork],
-    fork3 => [fork],
-    fork4 => [fork],
-    fork5 => [fork]
-   }.
+init_marking( fork1 ) -> [fork];
+init_marking( fork2 ) -> [fork];
+init_marking( fork3 ) -> [fork];
+init_marking( fork4 ) -> [fork];
+init_marking( fork5 ) -> [fork];
+init_marking( _ )     -> [].
 
 preset( take1 )    -> [fork1, fork2];
 preset( take2 )    -> [fork2, fork3];
