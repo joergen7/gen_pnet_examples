@@ -39,17 +39,18 @@
 start() ->
 
   F = fun
-        F( P ) ->
+        F( P, 0 ) -> gen_pnet:stop( P );
+        F( P, N ) ->
           timer:sleep( 2000 ),
           #stats{ current = Current } = gen_pnet:get_stats( P ),
           
 
           io:format( "~p~n", [Current] ),
-          F( P )
+          F( P, N-1 )
       end,
 
   {ok, Pid} = gen_pnet:start_link( ?MODULE, [] ),
-  F( Pid ).
+  F( Pid, 4 ).
 
 %%====================================================================
 %% Interface callback functions
