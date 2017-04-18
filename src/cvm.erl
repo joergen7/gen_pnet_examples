@@ -28,7 +28,7 @@
 -export( [place_lst/0, trsn_lst/0, init_marking/1, preset/1, is_enabled/2,
 	      fire/2] ).
 
--export( [start_link/0, insert_coin/1] ).
+-export( [start_link/0, insert_coin/1, remove_cookie_box/1] ).
 
 -include_lib( "gen_pnet/include/gen_pnet.hrl" ).
 
