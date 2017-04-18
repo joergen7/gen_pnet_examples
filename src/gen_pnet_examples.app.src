@@ -1,5 +1,5 @@
 {application, gen_pnet_examples,
- [{description, "An example collection for the gen_pnet behavior"},
+ [{description, "An example collection for the gen_pnet behavior."},
   {vsn, "0.1.0"},
   {registered, []},
   {applications,
