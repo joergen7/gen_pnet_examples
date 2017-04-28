@@ -22,7 +22,7 @@
 
 -module( cvm ).
 
--export( [code_change/3, handle_call/3, handle_cast/2, handle_info/2,
+-export( [code_change/3, handle_call/3, handle_cast/2, handle_info/2, init/1,
           terminate/2, trigger/3] ).
 
 -export( [place_lst/0, trsn_lst/0, init_marking/2, preset/1, is_enabled/2,
@@ -37,7 +37,7 @@
 %%====================================================================
 
 start_link() ->
-  gen_pnet:start_link( ?MODULE, [] ).
+  gen_pnet:start_link( ?MODULE, [], [] ).
 
 insert_coin( Pid ) ->
   gen_pnet:call( Pid, insert_coin ).
@@ -66,6 +66,8 @@ handle_call( _Request, _From, _NetState ) -> {reply, {error, bad_msg}}.
 handle_cast( _Request, _NetState ) -> noreply.
 
 handle_info( _Request, _NetState ) -> noreply.
+
+init( _Args ) -> {ok, gen_pnet:new( ?MODULE, [] )}.
 
 terminate( _Reason, _NetState ) -> ok.
 

@@ -1,6 +1,11 @@
 -module( template ).
 -behaviour( gen_pnet ).
 
+
+%%====================================================================
+%% Exports
+%%====================================================================
+
 -export( [code_change/3, handle_call/3, handle_cast/2, handle_info/2, init/1,
           terminate/2, trigger/3] ).
 
@@ -9,14 +14,19 @@
 
 -export( [start_link/0] ).
 
+%%====================================================================
+%% Includes
+%%====================================================================
+
 -include_lib( "gen_pnet/include/gen_pnet.hrl" ).
+
 
 %%====================================================================
 %% API functions
 %%====================================================================
 
-start_link() ->
-  gen_pnet:start_link( ?MODULE, [] ).
+start_link() -> gen_pnet:start_link( ?MODULE, [], [] ).
+
 
 %%====================================================================
 %% Interface callback functions
@@ -41,22 +51,16 @@ trigger( _Place, _Token, _NetState ) -> pass.
 %% Petri net callback functions
 %%====================================================================
 
-place_lst() ->
-  [].
+place_lst() -> [].
 
-trsn_lst() ->
-  [].
+trsn_lst() -> [].
 
-init_marking( _Place, _UsrInfo ) ->
-  [].
+init_marking( _Place, _UsrInfo ) -> [].
 
-preset( _Trsn ) ->
-  [].
+preset( _Trsn ) -> [].
 
-is_enabled( _Trsn, _Mode ) ->
-  false.
+is_enabled( _Trsn, _Mode ) -> false.
 
-fire( _Trsn, _Mode, _UsrInfo ) ->
-  abort.
+fire( _Trsn, _Mode, _UsrInfo ) -> abort.
 
 
