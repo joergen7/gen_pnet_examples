@@ -24,11 +24,13 @@
 
 -behaviour( gen_pnet ).
 
--export( [start/0] ).
--export( [code_change/3, handle_call/3, handle_cast/2, handle_info/2,
-          terminate/2, trigger/2] ).
--export( [place_lst/0, trsn_lst/0, init_marking/1, preset/1, is_enabled/2,
-          fire/2] ).
+-export( [start/0, start_link/0] ).
+
+-export( [code_change/3, handle_call/3, handle_cast/2, handle_info/2, init/1,
+          terminate/2, trigger/3] ).
+
+-export( [place_lst/0, trsn_lst/0, init_marking/2, preset/1, is_enabled/2,
+          fire/3] ).
 
 -include_lib( "gen_pnet/include/gen_pnet.hrl" ).
 
@@ -49,8 +51,12 @@ start() ->
           F( P, N-1 )
       end,
 
-  {ok, Pid} = gen_pnet:start_link( ?MODULE, [] ),
+  {ok, Pid} = start_link(),
   F( Pid, 4 ).
+
+start_link() ->
+  gen_pnet:start_link( ?MODULE, [], [] ).
+
 
 %%====================================================================
 %% Interface callback functions
@@ -64,9 +70,11 @@ handle_cast( _Request, _NetState ) -> noreply.
 
 handle_info( _Request, _NetState ) -> noreply.
 
+init( _Args ) -> {ok, gen_pnet:new( ?MODULE, [] )}.
+
 terminate( _Reason, _NetState ) -> ok.
 
-trigger( _, _ ) -> pass.
+trigger( _Place, _Token, _NetState ) -> pass.
 
 %%====================================================================
 %% Petri net callback functions
@@ -83,12 +91,12 @@ trsn_lst() ->
     take4, release4,
     take5, release5].
 
-init_marking( fork1 ) -> [fork];
-init_marking( fork2 ) -> [fork];
-init_marking( fork3 ) -> [fork];
-init_marking( fork4 ) -> [fork];
-init_marking( fork5 ) -> [fork];
-init_marking( _ )     -> [].
+init_marking( fork1, _ ) -> [fork];
+init_marking( fork2, _ ) -> [fork];
+init_marking( fork3, _ ) -> [fork];
+init_marking( fork4, _ ) -> [fork];
+init_marking( fork5, _ ) -> [fork];
+init_marking( _, _ )     -> [].
 
 preset( take1 )    -> [fork1, fork2];
 preset( take2 )    -> [fork2, fork3];
@@ -113,16 +121,16 @@ is_enabled( release4, #{ eat4 := [eating] } )              -> true;
 is_enabled( release5, #{ eat5 := [eating] } )              -> true;
 is_enabled( _, _ )                                         -> false.
 
-fire( take1, _ )    -> {produce, #{ eat1 => [eating] }};
-fire( take2, _ )    -> {produce, #{ eat2 => [eating] }};
-fire( take3, _ )    -> {produce, #{ eat3 => [eating] }};
-fire( take4, _ )    -> {produce, #{ eat4 => [eating] }};
-fire( take5, _ )    -> {produce, #{ eat5 => [eating] }};
-fire( release1, _ ) -> {produce, #{ fork1 => [fork], fork2 => [fork] }};
-fire( release2, _ ) -> {produce, #{ fork2 => [fork], fork3 => [fork] }};
-fire( release3, _ ) -> {produce, #{ fork3 => [fork], fork4 => [fork] }};
-fire( release4, _ ) -> {produce, #{ fork4 => [fork], fork5 => [fork] }};
-fire( release5, _ ) -> {produce, #{ fork5 => [fork], fork1 => [fork] }}.
+fire( take1, _, _ )    -> {produce, #{ eat1 => [eating] }};
+fire( take2, _, _ )    -> {produce, #{ eat2 => [eating] }};
+fire( take3, _, _ )    -> {produce, #{ eat3 => [eating] }};
+fire( take4, _, _ )    -> {produce, #{ eat4 => [eating] }};
+fire( take5, _, _ )    -> {produce, #{ eat5 => [eating] }};
+fire( release1, _, _ ) -> {produce, #{ fork1 => [fork], fork2 => [fork] }};
+fire( release2, _, _ ) -> {produce, #{ fork2 => [fork], fork3 => [fork] }};
+fire( release3, _, _ ) -> {produce, #{ fork3 => [fork], fork4 => [fork] }};
+fire( release4, _, _ ) -> {produce, #{ fork4 => [fork], fork5 => [fork] }};
+fire( release5, _, _ ) -> {produce, #{ fork5 => [fork], fork1 => [fork] }}.
 
 
 

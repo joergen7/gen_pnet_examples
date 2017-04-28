@@ -1,11 +1,11 @@
 -module( template ).
 -behaviour( gen_pnet ).
 
--export( [code_change/3, handle_call/3, handle_cast/2, handle_info/2,
-          terminate/2, trigger/2] ).
+-export( [code_change/3, handle_call/3, handle_cast/2, handle_info/2, init/1,
+          terminate/2, trigger/3] ).
 
--export( [place_lst/0, trsn_lst/0, init_marking/1, preset/1, is_enabled/2,
-        fire/2] ).
+-export( [place_lst/0, trsn_lst/0, init_marking/2, preset/1, is_enabled/2,
+          fire/3] ).
 
 -export( [start_link/0] ).
 
@@ -24,15 +24,17 @@ start_link() ->
 
 code_change( _OldVsn, NetState, _Extra ) -> {ok, NetState}.
 
-handle_call( _, _, _ ) -> {reply, {error, bad_msg}}.
+handle_call( _Request, _From, _NetState ) -> {reply, {error, bad_msg}}.
 
 handle_cast( _Request, _NetState ) -> noreply.
 
 handle_info( _Request, _NetState ) -> noreply.
 
+init( _Args ) -> {ok, gen_pnet:new( ?MODULE, [] )}.
+
 terminate( _Reason, _NetState ) -> ok.
 
-trigger( _, _ ) -> pass.
+trigger( _Place, _Token, _NetState ) -> pass.
 
 
 %%====================================================================
@@ -45,16 +47,16 @@ place_lst() ->
 trsn_lst() ->
   [].
 
-init_marking( _ ) ->
+init_marking( _Place, _UsrInfo ) ->
   [].
 
-preset( _ ) ->
+preset( _Trsn ) ->
   [].
 
-is_enabled( _, _ ) ->
+is_enabled( _Trsn, _Mode ) ->
   false.
 
-fire( _, _ ) ->
+fire( _Trsn, _Mode, _UsrInfo ) ->
   abort.
 
 
