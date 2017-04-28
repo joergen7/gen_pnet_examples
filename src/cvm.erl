@@ -23,7 +23,7 @@
 -module( cvm ).
 
 -export( [code_change/3, handle_call/3, handle_cast/2, handle_info/2,
-          terminate/2, trigger/2] ).
+          terminate/2, trigger/3] ).
 
 -export( [place_lst/0, trsn_lst/0, init_marking/2, preset/1, is_enabled/2,
 	        fire/3] ).
@@ -51,18 +51,17 @@ remove_cookie_box( Pid ) ->
 
 code_change( _OldVsn, NetState, _Extra ) -> {ok, NetState}.
 
-handle_call( insert_coin, _, _ ) ->
+handle_call( insert_coin, _From, _NetState ) ->
   {reply, ok, #{}, #{ coin_slot => [coin] }};
 
-handle_call( remove_cookie_box, _,
-             NetState ) ->
+handle_call( remove_cookie_box, _From, NetState ) ->
 
   case gen_pnet:ls_place( compartment, NetState ) of
-  	[]    -> {reply, {error, empty_compartment}};
-  	[_|_] -> {reply, ok, #{ compartment => [cookie_box] }, #{}}
+    []    -> {reply, {error, empty_compartment}};
+    [_|_] -> {reply, ok, #{ compartment => [cookie_box] }, #{}}
   end;
 
-handle_call( _, _, _ ) -> {reply, {error, bad_msg}}.
+handle_call( _Request, _From, _NetState ) -> {reply, {error, bad_msg}}.
 
 handle_cast( _Request, _NetState ) -> noreply.
 
@@ -70,7 +69,7 @@ handle_info( _Request, _NetState ) -> noreply.
 
 terminate( _Reason, _NetState ) -> ok.
 
-trigger( _, _ ) -> pass.
+trigger( _Place, _Token, _UsrInfo ) -> pass.
 
 
 %%====================================================================
@@ -83,18 +82,21 @@ place_lst() ->
 trsn_lst() ->
    [a, b].
 
-init_marking( storage, _ ) -> [cookie_box, cookie_box, cookie_box];
-init_marking( _, _ )       -> [].
+init_marking( storage, _UsrInfo ) -> [cookie_box, cookie_box, cookie_box];
+init_marking( _Place, _UsrInfo )  -> [].
 
 preset( a ) -> [coin_slot];
 preset( b ) -> [signal, storage].
 
 is_enabled( a, #{ coin_slot := [coin] } )                      -> true;
 is_enabled( b, #{ signal := [sig], storage := [cookie_box] } ) -> true;
-is_enabled( _, _ )                                             -> false.
+is_enabled( _Trsn, _Mode )                                     -> false.
 
-fire( a, _, _ ) -> {produce, #{ cash_box => [coin], signal => [sig] }};
-fire( b, _, _ ) -> {produce, #{ compartment => [cookie_box] }}.
+fire( a, _Mode, _UsrInfo ) ->
+  {produce, #{ cash_box => [coin], signal => [sig] }};
+
+fire( b, _Mode, _UsrInfo ) ->
+  {produce, #{ compartment => [cookie_box] }}.
 
 
 
