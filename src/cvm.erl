@@ -2,7 +2,7 @@
 %%
 %% An example collection for the gen_pnet behavior.
 %%
-%% Copyright 2017 Jorgen Brandt
+%% Copyright 2017 Jörgen Brandt
 %%
 %% Licensed under the Apache License, Version 2.0 (the "License");
 %% you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 %% See the License for the specific language governing permissions and
 %% limitations under the License.
 
-%% @author Jorgen Brandt <joergen.brandt@onlinehome.de>
+%% @author Jörgen Brandt <joergen.brandt@onlinehome.de>
 %% @version 0.1.0
-%% @copyright 2017 Jorgen Brandt
+%% @copyright 2017 Jörgen Brandt
 
 -module( cvm ).
 
