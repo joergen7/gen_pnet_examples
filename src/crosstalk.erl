@@ -26,7 +26,7 @@
 -export( [code_change/3, handle_call/3, handle_cast/2, handle_info/2, init/1,
           terminate/2, trigger/3] ).
 
--export( [place_lst/0, trsn_lst/0, init_marking/2, preset/1, is_enabled/2,
+-export( [place_lst/0, trsn_lst/0, init_marking/2, preset/1, is_enabled/3,
           fire/3] ).
 
 -export( [start/0, start_link/0] ).
@@ -103,7 +103,7 @@ preset( return2 )    -> [replied2, finished1];
 preset( crosstalk1 ) -> [waiting1, sent2];
 preset( crosstalk2 ) -> [waiting2, sent1].
 
-is_enabled( _, _ ) -> true.
+is_enabled( _, _, _ ) -> true.
 
 fire( send1, _, _ )      -> {produce, #{ waiting1 => [tk], sent1 => [tk] }};
 fire( send2, _, _ )      -> {produce, #{ waiting2 => [tk], sent2 => [tk] }};

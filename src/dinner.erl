@@ -29,7 +29,7 @@
 -export( [code_change/3, handle_call/3, handle_cast/2, handle_info/2, init/1,
           terminate/2, trigger/3] ).
 
--export( [place_lst/0, trsn_lst/0, init_marking/2, preset/1, is_enabled/2,
+-export( [place_lst/0, trsn_lst/0, init_marking/2, preset/1, is_enabled/3,
           fire/3] ).
 
 -include_lib( "gen_pnet/include/gen_pnet.hrl" ).
@@ -109,17 +109,17 @@ preset( release3 ) -> [eat3];
 preset( release4 ) -> [eat4];
 preset( release5 ) -> [eat5].
 
-is_enabled( take1, #{ fork1 := [fork], fork2 := [fork] } ) -> true;
-is_enabled( take2, #{ fork2 := [fork], fork3 := [fork] } ) -> true;
-is_enabled( take3, #{ fork3 := [fork], fork4 := [fork] } ) -> true;
-is_enabled( take4, #{ fork4 := [fork], fork5 := [fork] } ) -> true;
-is_enabled( take5, #{ fork5 := [fork], fork1 := [fork] } ) -> true;
-is_enabled( release1, #{ eat1 := [eating] } )              -> true;
-is_enabled( release2, #{ eat2 := [eating] } )              -> true;
-is_enabled( release3, #{ eat3 := [eating] } )              -> true;
-is_enabled( release4, #{ eat4 := [eating] } )              -> true;
-is_enabled( release5, #{ eat5 := [eating] } )              -> true;
-is_enabled( _, _ )                                         -> false.
+is_enabled( take1, #{ fork1 := [fork], fork2 := [fork] }, _ ) -> true;
+is_enabled( take2, #{ fork2 := [fork], fork3 := [fork] }, _ ) -> true;
+is_enabled( take3, #{ fork3 := [fork], fork4 := [fork] }, _ ) -> true;
+is_enabled( take4, #{ fork4 := [fork], fork5 := [fork] }, _ ) -> true;
+is_enabled( take5, #{ fork5 := [fork], fork1 := [fork] }, _ ) -> true;
+is_enabled( release1, #{ eat1 := [eating] }, _ )              -> true;
+is_enabled( release2, #{ eat2 := [eating] }, _ )              -> true;
+is_enabled( release3, #{ eat3 := [eating] }, _ )              -> true;
+is_enabled( release4, #{ eat4 := [eating] }, _ )              -> true;
+is_enabled( release5, #{ eat5 := [eating] }, _ )              -> true;
+is_enabled( _, _, _ )                                         -> false.
 
 fire( take1, _, _ )    -> {produce, #{ eat1 => [eating] }};
 fire( take2, _, _ )    -> {produce, #{ eat2 => [eating] }};

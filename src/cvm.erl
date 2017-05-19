@@ -25,7 +25,7 @@
 -export( [code_change/3, handle_call/3, handle_cast/2, handle_info/2, init/1,
           terminate/2, trigger/3] ).
 
--export( [place_lst/0, trsn_lst/0, init_marking/2, preset/1, is_enabled/2,
+-export( [place_lst/0, trsn_lst/0, init_marking/2, preset/1, is_enabled/3,
 	        fire/3] ).
 
 -export( [start_link/0, insert_coin/1, remove_cookie_box/1] ).
@@ -90,9 +90,9 @@ init_marking( _Place, _UsrInfo )  -> [].
 preset( a ) -> [coin_slot];
 preset( b ) -> [signal, storage].
 
-is_enabled( a, #{ coin_slot := [coin] } )                      -> true;
-is_enabled( b, #{ signal := [sig], storage := [cookie_box] } ) -> true;
-is_enabled( _Trsn, _Mode )                                     -> false.
+is_enabled( a, #{ coin_slot := [coin] }, _ )                      -> true;
+is_enabled( b, #{ signal := [sig], storage := [cookie_box] }, _ ) -> true;
+is_enabled( _Trsn, _Mode, _UsrInfo )                              -> false.
 
 fire( a, _Mode, _UsrInfo ) ->
   {produce, #{ cash_box => [coin], signal => [sig] }};

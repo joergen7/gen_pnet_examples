@@ -9,7 +9,7 @@
 -export( [code_change/3, handle_call/3, handle_cast/2, handle_info/2, init/1,
           terminate/2, trigger/3] ).
 
--export( [place_lst/0, trsn_lst/0, init_marking/2, preset/1, is_enabled/2,
+-export( [place_lst/0, trsn_lst/0, init_marking/2, preset/1, is_enabled/3,
           fire/3] ).
 
 -export( [start_link/0] ).
@@ -59,7 +59,7 @@ init_marking( _Place, _UsrInfo ) -> [].
 
 preset( _Trsn ) -> [].
 
-is_enabled( _Trsn, _Mode ) -> false.
+is_enabled( _Trsn, _Mode, _UsrInfo ) -> false.
 
 fire( _Trsn, _Mode, _UsrInfo ) -> abort.
 
