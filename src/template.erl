@@ -12,7 +12,7 @@
 -export( [place_lst/0, trsn_lst/0, init_marking/2, preset/1, is_enabled/3,
           fire/3] ).
 
--export( [start_link/0] ).
+-export( [start_link/0, start_link/1] ).
 
 %%====================================================================
 %% Includes
@@ -26,6 +26,8 @@
 %%====================================================================
 
 start_link() -> gen_pnet:start_link( ?MODULE, [], [] ).
+
+start_link( ServerName ) -> gen_pnet:start_link( ServerName, ?MODULE, [], [] ).
 
 
 %%====================================================================
