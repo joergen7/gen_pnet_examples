@@ -56,7 +56,7 @@ handle_call( insert_coin, _From, _NetState ) ->
 
 handle_call( remove_cookie_box, _From, NetState ) ->
 
-  case gen_pnet:ls_place( compartment, NetState ) of
+  case gen_pnet:get_ls( compartment, NetState ) of
     []    -> {reply, {error, empty_compartment}};
     [_|_] -> {reply, ok, #{ compartment => [cookie_box] }, #{}}
   end;
